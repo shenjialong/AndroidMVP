@@ -42,7 +42,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		this.myContext = context;
 	}
 	
-//	danli by sjl
+//	danli 
 	public static DataBaseHelper getDataBaseHelper(Context context){
 		synchronized (DataBaseHelper.class) {
 			if(dataBaseHelper==null){
@@ -66,27 +66,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	public void createDataBase() throws IOException {
 
 		boolean dbExist = checkDataBase();
+//		调试的时候将 此字段 设置为 false 实现每次启动都重新初始化 本测试机的数据库文件
 //		dbExist=false;
 		if (dbExist) {
 			// do nothing - database already exist
 		} else {
-			// By calling this method and empty database will be created into
-			// the default system path
-			// of your application so we are gonna be able to overwrite that
-			// database with our database.
 			this.getReadableDatabase();
-
 			try {
-
 				copyDataBase();
-
 			} catch (IOException e) {
-
 				throw new Error("Error copying database");
-
 			}
 		}
-
 	}
 
 	/**

@@ -26,8 +26,8 @@ import com.umeng.analytics.MobclickAgent;
 public class EditActivity extends Activity {
 
 	NavigationBar nb;
-	ListView lv; 
-	ListView catLv; 
+	ListView cardsListView; 
+	ListView categoryListView; 
 	Cursor datasource4card;
 	Cursor datasource4cato;
 	
@@ -46,7 +46,6 @@ public class EditActivity extends Activity {
 	@Override  
     protected void onResume() {  
         super.onResume();  
-//        setupViews();
         initListData();
         MobclickAgent.onResume(this);
     } 
@@ -71,23 +70,23 @@ public class EditActivity extends Activity {
 	 public void initListData(){
 		 datasource4card=myDbHelper.getDataSource(Constants.TYPE_CARD);
 			SimpleCursorAdapter adapter4card=new SimpleCursorAdapter(EditActivity.this, R.layout.listitem, datasource4card, new String[]{"name"},new int[]{R.id.listitem});
-			lv.setAdapter(adapter4card);
+			cardsListView.setAdapter(adapter4card);
 			
 			datasource4cato=myDbHelper.getDataSource(Constants.TYPE_CATEGORY);
 			SimpleCursorAdapter adapter4cato=new SimpleCursorAdapter(EditActivity.this, R.layout.listitem, datasource4cato, new String[]{"name"},new int[]{R.id.listitem});
-			catLv.setAdapter(adapter4cato);
+			categoryListView.setAdapter(adapter4cato);
 	 }
 	 
 	 
 	public void setupViews(){
 		nb=(NavigationBar)findViewById(R.id.nb_edit);
-		lv=(ListView)findViewById(R.id.listView);
-		catLv=(ListView)findViewById(R.id.listView2);
+		cardsListView=(ListView)findViewById(R.id.listView);
+		categoryListView=(ListView)findViewById(R.id.listView2);
 		
 		myDbHelper=  DataBaseHelper.getDataBaseHelper(EditActivity.this);
 		initListData();
 		
-		lv.setOnItemClickListener(new OnItemClickListener() {
+		cardsListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
@@ -95,7 +94,7 @@ public class EditActivity extends Activity {
 				}
 		});
 		
-		catLv.setOnItemClickListener(new OnItemClickListener() {
+		categoryListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
@@ -104,11 +103,10 @@ public class EditActivity extends Activity {
 		});
 		
 //		begin 增加 删除卡片或目录的功能 2013 07 31
-		lv.setOnItemLongClickListener(new ListViewLongClickListener(datasource4card,EditActivity.this,myDbHelper));
-		catLv.setOnItemLongClickListener(new ListViewLongClickListener(datasource4cato,EditActivity.this,myDbHelper));
+		cardsListView.setOnItemLongClickListener(new ListViewLongClickListener(datasource4card,EditActivity.this,myDbHelper));
+		categoryListView.setOnItemLongClickListener(new ListViewLongClickListener(datasource4cato,EditActivity.this,myDbHelper));
 //		end
 	}
-	
 	
 	public void startCardDetail(Cursor datasource,int position){
 		Intent intent=new Intent();
@@ -130,30 +128,8 @@ public class EditActivity extends Activity {
 	    }
 	}
 	
-//	 SQLiteDatabase db;
-//	 public SQLiteDatabase initDB(){
-//	        db=openOrCreateDatabase("xiaoyudi.db", Context.MODE_PRIVATE, null);  
-//	        return db; 
-//	 }
-//	
-//	public Cursor getDataSource(String type){
-//			initDB();
-//			Cursor c = db.rawQuery("SELECT * FROM card WHERE type = ?", new String[]{type});
-//			if(c!=null){
-//				while (c.moveToNext()) {
-//					int id = c.getInt(c.getColumnIndex("_id"));  
-//					String cardname = c.getString(c.getColumnIndex("cardname"));  
-//					String pic= c.getString(c.getColumnIndex("pic"));  
-//					String yy = c.getString(c.getColumnIndex("yy"));  
-//					Log.i("sjl", "cardname=>" + cardname + ", picindex=>" + pic + ", yyindex=>" + yy+"type:"+type);  
-//				}  
-//			}
-//			return c;
-//	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_edit, menu);
 		return true;
 	}

@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
@@ -129,6 +130,7 @@ public class ChildActivity extends Activity {
 	}
 	public void initNavigationBar2(String catogeryName){
 		nb.setTvTitle(catogeryName);
+		nb.setBtnLeftBacground(R.drawable.ic_back);
 		nb.setBtnRightVisble(false);
 		nb.setBtnLeftClickListener(new OnClickListener() {
 			@Override
@@ -151,9 +153,13 @@ public class ChildActivity extends Activity {
 //		 			此处设置将有数据的 图片位置 flag 设置为1 其余 值为0的不予显示
 		 			Log.i("sjl", "visible i :"+position);
 		 			displayFlag[position]=1;
-		 			File picFile = new File(Constants.dir_path_pic, cardItem.getImage_filename());
-			    	Uri uri=Uri.fromFile(picFile);
-					ivList.get(position).setImageURI(uri);
+//		 			File picFile = new File(Constants.dir_path_pic, cardItem.getImage_filename());
+//			    	Uri uri=Uri.fromFile(picFile);
+//					ivList.get(position).setImageURI(uri);
+					
+					Bitmap mybitmap=GlobalUtil.preHandleImage(null,Constants.dir_path_pic+cardItem.getImage_filename());
+					ivList.get(position).setImageBitmap(mybitmap);
+					
 					
 					if(position!=0||(position==0&&isLauchPage)){
 						if(cardItem.getType().equals(Constants.TYPE_CATEGORY)){
@@ -164,8 +170,8 @@ public class ChildActivity extends Activity {
 						tvList.get(position).setText(cardItem.getName());
 					}
 					
-					picFile=null;
-					uri=null;
+//					picFile=null;
+//					uri=null;
 					
 	 			}
 			}  

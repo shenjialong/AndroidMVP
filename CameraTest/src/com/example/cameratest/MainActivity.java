@@ -52,6 +52,7 @@ public class MainActivity extends Activity implements OnClickListener{
 //  private OnClickListener imgViewListener;  
     private Bitmap myBitmap;  
     private byte[] mContent;  
+    public boolean isRecording=false;
     String returnString;  
     DataBaseHelper dataBaseHelper;
     private static final int REQUEST_CAMERA = 1;  
@@ -171,7 +172,7 @@ public class MainActivity extends Activity implements OnClickListener{
     	stopBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+				isRecording=false;
 				mMediaRecorder.stop();
 				mMediaRecorder.release();
 				mMediaRecorder = null;
@@ -196,6 +197,13 @@ public class MainActivity extends Activity implements OnClickListener{
 			public void onClick(View v) {
 				
 				if(imageflag){
+					if(isRecording){
+						mMediaRecorder.stop();
+						mMediaRecorder.release();
+						mMediaRecorder = null;
+					}
+					
+					
 					String name=cardnameET.getText().toString();
 //					UUID 生成 
 					String image=GlobalUtil.getId();
@@ -213,16 +221,6 @@ public class MainActivity extends Activity implements OnClickListener{
 					MobclickAgent.onEvent(MainActivity.this, "newevent", info);
 					Log.i("sjl", "数据已经传送友盟");
 //					end 
-					Log.i("sjl", "正在向数据库保存新纪录  属性值：");
-					
-					Log.i("sjl", "name:"+name);
-					Log.i("sjl", "image:"+image);
-					Log.i("sjl", "audio:"+audio);
-					Log.i("sjl", "id:"+card_id);
-					Log.i("sjl", "image_filename:"+image_filename);
-					Log.i("sjl", "audio_filename:"+audio_filename);
-					
-					
 			        SharedPreferences sp=getSharedPreferences("xiaoyudi", 0);
 			        sp.edit().putInt("yyItemIndex", ++yyItemIndex).putInt("picItemIndex", ++picItemIndex).commit();
 					Toast.makeText(MainActivity.this, "保存 成功", Toast.LENGTH_LONG).show();
@@ -237,8 +235,9 @@ public class MainActivity extends Activity implements OnClickListener{
     	recordBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				isRecording=true;
 					 file = new File(Constants.dir_path_yy+ yyItemIndex + ".mp3"); 
-					 Toast.makeText(getApplicationContext(), "正在录音，录音文件在"+file.getAbsolutePath(), Toast.LENGTH_LONG) 
+					 Toast.makeText(getApplicationContext(), "录音中,请对话筒讲话..", Toast.LENGTH_LONG) 
 					 .show(); 
 					 /* 创建录音文件，第一个参数是文件名前缀，第二个参数是后缀，第三个参数是SD路径 */
 					 try {
@@ -262,7 +261,6 @@ public class MainActivity extends Activity implements OnClickListener{
 					 } catch (Exception e) {
 							e.printStackTrace();
 					 }
-					Toast.makeText(MainActivity.this, "录音中..", Toast.LENGTH_LONG).show();
 			}
 		});
     }
@@ -302,7 +300,7 @@ public class MainActivity extends Activity implements OnClickListener{
                     } catch (FileNotFoundException e) {  
                             e.printStackTrace();  
                     }  
-                    myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut); 
+                    myBitmap.compress(Bitmap.CompressFormat.JPEG, 30, fOut); 
                     myBitmap.recycle();
                     fOut.close();
                     fOut=null;

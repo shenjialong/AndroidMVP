@@ -27,7 +27,13 @@
             android:layout_width="wrap_content"
             android:layout_weight="5"
             android:layout_height="0dip"
-            android:src="@drawable/ic_add" />
+            android:scaleType="fitCenter"
+            android:paddingTop="8dp"
+            android:paddingBottom="30dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="12dp"
+            android:src="@drawable/ic_add"
+             />
         <TextView
         android:id="@+id/textView1"
         android:layout_width="match_parent"
@@ -49,6 +55,10 @@
             android:layout_width="wrap_content"
              android:layout_weight="5"
             android:layout_height="0dip"
+            android:paddingTop="8dp"
+            android:paddingBottom="30dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="12dp"
             android:src="@drawable/ic_add" />
          <TextView
         android:id="@+id/textView2"
@@ -79,6 +89,10 @@
             android:layout_width="wrap_content"
             android:layout_weight="5"
             android:layout_height="0dip"
+            android:paddingTop="8dp"
+            android:paddingBottom="30dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="12dp"
             android:src="@drawable/ic_add" />
         <TextView
         android:id="@+id/textView3"
@@ -101,6 +115,10 @@
             android:layout_weight="5"
             android:layout_height="0dip"
             android:src="@drawable/ic_add"
+            android:paddingTop="8dp"
+            android:paddingBottom="30dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="12dp"
            />
           <TextView
         android:id="@+id/textView4"
@@ -130,6 +148,10 @@
             android:layout_width="wrap_content"
             android:layout_weight="5"
             android:layout_height="0dip"
+            android:paddingTop="8dp"
+            android:paddingBottom="30dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="12dp"
             android:src="@drawable/ic_add" />
         <TextView
         android:id="@+id/textView5"
@@ -151,6 +173,10 @@
             android:layout_width="wrap_content"
             android:layout_weight="5"
             android:layout_height="0dip"
+            android:paddingTop="8dp"
+            android:paddingBottom="30dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="12dp"
             android:src="@drawable/ic_add" />
         <TextView
         android:id="@+id/textView6"
@@ -179,6 +205,10 @@
             android:layout_width="wrap_content"
             android:layout_weight="5"
             android:layout_height="0dip"
+            android:paddingTop="8dp"
+            android:paddingBottom="30dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="12dp"
             android:src="@drawable/ic_add" />
         <TextView
         android:id="@+id/textView7"
@@ -200,6 +230,10 @@
             android:layout_width="wrap_content"
             android:layout_weight="5"
             android:layout_height="0dip"
+            android:paddingTop="8dp"
+            android:paddingBottom="30dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="12dp"
             android:src="@drawable/ic_add" />
         <TextView
         android:id="@+id/textView8"

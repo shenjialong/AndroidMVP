@@ -17,8 +17,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -125,7 +125,7 @@ public class FirstActivity extends Activity {
 //		begin 以下是 为了在编辑界面返回到主页面的时候  刷新出现内容不同步的 临时解决方案
 		for(int i=1;i<ivList.size();i++){
 			ivList.get(i).setImageResource(R.drawable.ic_add);
-			ivList.get(i).setBackgroundResource(R.drawable.ic_add);
+//			ivList.get(i).setBackgroundResource(R.drawable.ic_add);
 		}
 //		end by 2013 07 31
 		Log.i("sjl", "parent id is :"+parent);
@@ -137,17 +137,25 @@ public class FirstActivity extends Activity {
 	 				Integer key=(Integer)it.next();
 	 				Card cardItem=cardMap.get(key);
 		 			int position=cardItem.getPosition();
-		 			File picFile = new File(Constants.dir_path_pic, cardItem.getImage_filename());
-			    	Uri uri=Uri.fromFile(picFile);
-					ivList.get(position).setImageURI(uri);
+//		 			begin  正在 修改因 显示手机
+//		 			File picFile = new File(Constants.dir_path_pic, cardItem.getImage_filename());
+//			    	Uri uri=Uri.fromFile(picFile);
+//					ivList.get(position).setImageURI(uri);
+					Log.i("sjl", "正在初始化页面的各个ITEM cardItem.getImage_filename():"+cardItem.getImage_filename());
+					Bitmap mybitmap=GlobalUtil.preHandleImage(null,Constants.dir_path_pic+cardItem.getImage_filename());
+					ivList.get(position).setImageBitmap(mybitmap);
+//					mybitmap.recycle();
+//					mybitmap=null;
+//					end
+					
 			    	
 					if(cardItem.getType().equals(Constants.TYPE_CATEGORY)){
 						ivList.get(position).setBackgroundResource(R.drawable.ic_category);
 					}else{
 						ivList.get(position).setBackgroundResource(R.drawable.ic_card);
 					}
-					picFile=null;
-					uri=null;
+//					picFile=null;
+//					uri=null;
 					tvList.get(position).setText(cardItem.getName());
 	 			}
 	 		}
@@ -162,20 +170,20 @@ public class FirstActivity extends Activity {
           sp.edit().putBoolean("firstTime", false).commit();
 //      }
 	}
-	String[] images=new String[]{"p1_11.jpg","p1_12.jpg","p1_21.jpg","p1_22.jpg","p1_23.jpg","p1_24.jpg","p1_1.jpg","p1_2.jpg","p1_3.jpg","p1_4.jpg"
-			,"p1_5.jpg"
-			,"p1_6.jpg","selfcare.gif"};
+	String[] images=new String[]{"p1_11.jpg","p1_12.jpg","p1_21.jpg","p1_22.jpg","p1_23.jpg","p1_24.jpg","p1_2.jpg"};
 	String[] audios=new String[]{"s1_11.mp3","s1_12.mp3","s1_21.mp3","s1_22.mp3","s1_23.mp3","s1_24.mp3"};
 	
 	public void copyAssets(String [] resources,String path) throws IOException{
 		
 		Log.i("sjl", "正在复制资源 声音和图片资源");
+		Log.i("sjl", "resources.length:"+resources.length);
 		for(int i=0;i<resources.length;i++){
 			String outFileName = path+resources[i];
 			File file=new File(outFileName);
+			Log.i("sjl", "-----outFileName："+outFileName);
 			if(!file.exists()){
 				InputStream myInput = getAssets().open(resources[i]);
-		    	Log.i("sjl", outFileName);
+		    	Log.i("sjl", "-----复制图片："+outFileName);
 		    	OutputStream myOutput = new FileOutputStream(outFileName);
 		    	byte[] buffer = new byte[1024];
 		    	int length;
@@ -189,7 +197,6 @@ public class FirstActivity extends Activity {
 			}
 		}
 	}
-	
 	
     Intent intent;
 	public void setOnClickListener(){
@@ -274,17 +281,26 @@ public class FirstActivity extends Activity {
 //				用新选择的CARD替换原有的Card
 				cardMap.put(position, card);
 				String filename=myDbHelper.queryFilename(image);
-				File picFile = new File(Constants.dir_path_pic, filename);
-		    	Uri uri=Uri.fromFile(picFile);
-		    	Log.i("sjl", "长按添加  返回到原页面   正在渲染 图片 position:"+position);
-				ivList.get(position).setImageURI(uri);
+//				begin 正在修改  选取图片引起的oom错误   by sjl 2013 07 31
+//				File picFile = new File(Constants.dir_path_pic, filename);
+//		    	Uri uri=Uri.fromFile(picFile);
+//				ivList.get(position).setImageURI(uri);
+				Bitmap mybitmap=GlobalUtil.preHandleImage(ivList.get(position),Constants.dir_path_pic+filename);
+				mybitmap=GlobalUtil.small(mybitmap);
+				Log.i("sjl", "缩放了...");
+				ivList.get(position).setImageBitmap(mybitmap);
+				mybitmap.recycle();
+				mybitmap=null;
+				
+//				end
+				Log.i("sjl", "正在渲染图片.."+position);
 				if(type.equals(Constants.TYPE_CATEGORY)){
 					ivList.get(position).setBackgroundResource(R.drawable.ic_category);
 				}else{
 					ivList.get(position).setBackgroundResource(R.drawable.ic_card);
 				}
-				picFile=null;
-				uri=null;
+//				picFile=null;
+//				uri=null;
 				tvList.get(position).setText(name);
 				Log.i("sjl", "长按添加  返回到原页面   正在渲染 图片cardname:"+name);
 			}

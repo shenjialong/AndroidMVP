@@ -28,7 +28,8 @@
         android:icon="@drawable/ic_launcher1"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
-        <meta-data android:value="51c7cd5056240bab31048abc" android:name="UMENG_APPKEY"></meta-data>
+        <meta-data android:value="51f884d656240bb13201481c" android:name="UMENG_APPKEY"></meta-data>
+			                      
 		<meta-data android:value="yingyonghui" android:name="UMENG_CHANNEL"/>
         <activity
             android:name="com.example.cameratest.MainActivity"

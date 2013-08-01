@@ -28,7 +28,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +38,6 @@ import com.example.util.DataBaseHelper;
 import com.umeng.analytics.MobclickAgent;
 
 public class EditCardActivity extends Activity  implements OnClickListener{
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -115,9 +113,9 @@ public class EditCardActivity extends Activity  implements OnClickListener{
     	type=intent.getStringExtra("type");
     	_id=intent.getStringExtra("_id");
     	imageFile = new File(Constants.dir_path_pic, image_filename);
+    	preview=(ImageView)findViewById(R.id.uploadIV);
     	if(imageFile!=null){
     		Uri uri=Uri.fromFile(imageFile);
-        	preview=(ImageView)findViewById(R.id.uploadIV);
         	preview.setImageURI(uri);
         	uri=null;
         	imageFile=null;
@@ -132,14 +130,6 @@ public class EditCardActivity extends Activity  implements OnClickListener{
     		audioFile = new File(Constants.dir_path_yy, audio_filename);
     	}
     	
-    	Log.i("sjl", "编辑卡片界面  个属性值：");
-    	Log.i("sjl", "name"+name);
-    	Log.i("sjl", "image"+image);
-    	Log.i("sjl", "audio"+audio);
-    	Log.i("sjl", "_id"+_id);
-    	Log.i("sjl", "image_filename"+image_filename);
-    	Log.i("sjl", "audio_filename"+audio_filename);
-    	
     	if(audioFile!=null&&audioFile.exists()){
         	playBtn.setEnabled(true);
     	}else{
@@ -148,6 +138,8 @@ public class EditCardActivity extends Activity  implements OnClickListener{
     	recordBtn.setEnabled(false);
     	clearBtn.setEnabled(false);
 		cardnameET.setEnabled(false);
+		preview.setOnClickListener(this);
+		preview.setEnabled(false);
     	
     }
 //    -----------------------------------------------------------
@@ -206,7 +198,7 @@ public class EditCardActivity extends Activity  implements OnClickListener{
 				clearBtn.setEnabled(true);
 				v.setEnabled(false);
 				catogerySP.setVisibility(View.VISIBLE);
-				preview.setOnClickListener(this);
+				preview.setEnabled(true);
 			}
 		});
     }
@@ -306,7 +298,7 @@ public class EditCardActivity extends Activity  implements OnClickListener{
 			public void onClick(View v) {
 				isRecording=true;
 				audioFile = new File(Constants.dir_path_yy+ audio_filename); 
-					 Toast.makeText(getApplicationContext(), "正在录音，录音文件在"+audioFile.getAbsolutePath(), Toast.LENGTH_LONG) 
+					 Toast.makeText(getApplicationContext(), "请对话筒讲话", Toast.LENGTH_LONG) 
 					 .show(); 
 					 /* 创建录音文件，第一个参数是文件名前缀，第二个参数是后缀，第三个参数是SD路径 */
 					 try {
@@ -330,7 +322,6 @@ public class EditCardActivity extends Activity  implements OnClickListener{
 					 } catch (Exception e) {
 							e.printStackTrace();
 					 }
-					Toast.makeText(EditCardActivity.this, "录音中..", Toast.LENGTH_LONG).show();
 			}
 		});
     }
@@ -343,40 +334,33 @@ public class EditCardActivity extends Activity  implements OnClickListener{
         super.onActivityResult(requestCode, resultCode, data);  
   
         ContentResolver resolver = getContentResolver();  
-        /** 
-         * 因为两种方式都用到了startActivityForResult方法， 
-         * 这个方法执行完后都会执行onActivityResult方法， 所以为了区别到底选择了那个方式获取图片要进行判断， 
-         * 这里的requestCode跟startActivityForResult里面第二个参数对应 
-         */  
         if (requestCode == 0)  
         {  
             try  
             {  
-            	Uri originalUri = data.getData();  
-            	
-            	if(originalUri!=null){
-            	   preview.setImageURI(originalUri);
-//                   // 将图片内容解析成字节数组  
-                   mContent = readStream(resolver.openInputStream(Uri.parse(originalUri.toString())));  
-//                   // 将字节数组转换为ImageView可调用的Bitmap对象  
-                   myBitmap = getPicFromBytes(mContent, null);  
-                   File f = new File(Constants.dir_path_pic+image_filename);  
-                   f.createNewFile();  
-                   FileOutputStream fOut = null;  
-                   try {  
-                           fOut = new FileOutputStream(f);  
-                   } catch (FileNotFoundException e) {  
-                           e.printStackTrace();  
-                   }  
-                   myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut); 
-                   myBitmap.recycle();
-                   originalUri=null;
-                		   f=null;
-                   imageFlag=true;
+            	if(data!=null){
+            		Uri originalUri = data.getData();  
+                	if(originalUri!=null){
+                	   preview.setImageURI(originalUri);
+//                       // 将图片内容解析成字节数组  
+                       mContent = readStream(resolver.openInputStream(Uri.parse(originalUri.toString())));  
+//                       // 将字节数组转换为ImageView可调用的Bitmap对象  
+                       myBitmap = getPicFromBytes(mContent, null);  
+                       File f = new File(Constants.dir_path_pic+image_filename);  
+                       f.createNewFile();  
+                       FileOutputStream fOut = null;  
+                       try {  
+                               fOut = new FileOutputStream(f);  
+                       } catch (FileNotFoundException e) {  
+                               e.printStackTrace();  
+                       }  
+                       myBitmap.compress(Bitmap.CompressFormat.JPEG, 30, fOut); 
+                       myBitmap.recycle();
+                       originalUri=null;
+                    		   f=null;
+                       imageFlag=true;
+                	}
             	}
-            	
-                
-                
             } catch ( Exception e )  
             {  
                 System.out.println(e.getMessage());  
@@ -389,11 +373,15 @@ public class EditCardActivity extends Activity  implements OnClickListener{
                 super.onActivityResult(requestCode, resultCode, data); 
                 if(resultCode == RESULT_OK){  
                 	Log.i("sjl", "data is RESULT_OK");
-                	preview.setImageURI(Uri.fromFile(new File(Constants.dir_path_pic+image_filename)));
+                	String path=Constants.dir_path_pic+image_filename;
+                	Uri u=Uri.fromFile(new File(path));
+                	Log.i("sjl", "即将刷新");
+                	preview.setImageURI(null);
+                	preview.setImageURI(u);
                 	imageFlag=true;
                 	return; 
               }  
-//                Bundle extras = data.getExtras();
+//                Bundle extras = data.getExtras(); 
 //                myBitmap = (Bitmap) extras.get("data");  
 //                ByteArrayOutputStream baos = new ByteArrayOutputStream();  
 //                myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);  
